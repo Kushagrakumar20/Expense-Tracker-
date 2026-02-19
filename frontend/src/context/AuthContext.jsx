@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
 // import axios from 'axios';
-import API from '../Api';
+import API from '../api';
 import toast from 'react-hot-toast';
 
 // Initial state
