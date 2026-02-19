@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../Api';
 import toast from 'react-hot-toast';
 
 // Initial state
@@ -63,21 +64,21 @@ export const AuthProvider = ({ children }) => {
 
   // Set up axios defaults
   useEffect(() => {
-    if (state.token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
-      localStorage.setItem('token', state.token);
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-      localStorage.removeItem('token');
-    }
-  }, [state.token]);
+  if (state.token) {
+    API.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
+    localStorage.setItem('token', state.token);
+  } else {
+    delete API.defaults.headers.common['Authorization'];
+    localStorage.removeItem('token');
+  }
+}, [state.token]);
 
   // Load user on app start
   useEffect(() => {
     const loadUser = async () => {
       if (state.token) {
         try {
-          const response = await axios.get('/api/auth/me');
+          const response = await API.get('/auth/me');
           dispatch({
             type: AUTH_ACTIONS.SET_USER,
             payload: response.data.data.user,
@@ -99,7 +100,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
       
-      const response = await axios.post('/api/auth/register', userData);
+      const response = await API.post('/auth/register', userData);
       
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
@@ -125,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
       
-      const response = await axios.post('/api/auth/login', credentials);
+      const response = await API.post('/auth/login', credentials);
       
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
